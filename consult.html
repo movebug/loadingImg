@@ -1,0 +1,103 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2019-08-30 19:43:04
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-08-31 12:01:10
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    div{
+        height: 50px;
+        width: 600px;
+        border: 1px solid red;
+    }
+    p{
+        height: 50px;
+        width: 0;
+        transition: all 1s;
+        background-color: aqua;
+    }
+    img{
+        height: 200px;
+        width: 200px;
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <p id="p"></p>
+    </div>
+    <script>
+        //正在进行的状态
+        const PENDING = 'pending';
+        //成功的状态
+        const FULFLLED = 'fufilled';
+        //失败的状态
+        const REJECTED = 'rejected';
+        let count = 0;
+        function myPromise(callback){
+            this.status = PENDING;
+            this._succ_res = null;
+            this._err_res = null;
+            let that = this;
+            function resolver(res){
+                that.status = FULFLLED;
+                that._succ_res = res;
+            }
+            function rejecter(rej){
+                that.status = REJECTED;
+                that._err_res = rej;
+            }
+            callback(resolver,rejecter);
+        }
+        myPromise.prototype.then = function(onFulfilled,onRejected){
+            if(this.status === FULFLLED){
+                onFulfilled(this._succ_res);
+            }else if(this.status === REJECTED){
+                onRejected(this._err_res);
+            }
+        }
+        function loadingImg(url,count){
+            return new myPromise((resolve,reject)=>{
+                let img = new Image();
+                img.onload = () => {
+                    p.style.width = 100 * count +'px';
+                    resolve({code:1});
+                }
+                img.onerror = () => {
+                    reject(new Error('图片加载失败'))
+                }
+                img.src = url;
+                document.body.appendChild(img);
+            })
+        }
+        let arr = [
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg",
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg",
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg",
+        ];
+            // setInterval(()=>{
+            //     count += 1;
+            //     if(count>arr.length){
+            //         return
+            //     }
+            //     loadingImg(arr[count -1],count)
+            // },1000)
+            arr.map(async (item,index)=>{
+                await loadingImg(item,index+1);
+            })
+        </script>
+</body>
+</html>

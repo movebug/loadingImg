@@ -1,0 +1,120 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2019-08-30 19:07:44
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-08-31 09:37:42
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div{
+            height: 50px;
+            width: 300px;
+            border: 1px solid red;
+        }
+        p{
+            height: 100%;
+            width: 0;
+            background-color: rebeccapurple;
+        }
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <div>
+        <p id="p"></p>
+    </div>
+</head>
+<body>
+    <script>
+        let count = 0;
+        function Mypromise(src,count){
+            return new Promise((resolve,reject)=>{
+                let img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    p.style.width = count * 50 +'px';
+                    resolve({code:1});
+                }
+                img.onerror = () => {
+                    reject(new Error('图片加载失败'))
+                }
+                document.body.appendChild(img);
+            })
+        }
+        let arr = [
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg",
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg",
+            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg"
+        ];
+        function loadingImg(imgs){
+            setInterval(()=>{
+            count += 1;
+            if(count > imgs.length){
+                return
+            }else{
+                Mypromise(imgs[count-1],count).then(res=>{
+                    console.log(res);
+                })
+            }
+            },1000)
+        }
+        loadingImg(arr);
+        // function promise(cb,resolvedata,rejectdata){
+        //     const that = this;
+        //     that.cb = cb;
+        //     that.resolvedata = resolvedata;
+        //     that.rejectdata = rejectdata;
+        //     this.then = function (success,error){
+        //         const result = success(that.resolvedata);
+        //         const errcb = error ? error(that.rejectdata):null;
+        //         return result?new promise(null,result):new promise();
+        //     }
+        //     this.resolve = function(data){
+        //         that.resolvedata = data;
+        //         return new promise(null,data)
+        //     }
+        //     this.reject = function (data){
+        //         that.rejectdata = data;
+        //         return new promise(null,null,data);
+        //     }
+        //     return (typeof cb) === 'function' ? cb(this.resolve,this.reject):null;
+        // }
+        // function actionFun(src){
+        //     return new promise((resolve,reject)=>{
+        //     let img = new Image();
+        //     img.src = src;
+        //     img.onload = () =>{
+        //         resolve(img);
+        //     }
+        //     img.onerror = () => {
+        //         reject(new Error('图片加载失败'))
+        //     }
+        //     })
+        // }
+        // let arr = [
+        //     "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4206348751,4177014175&fm=26&gp=0.jpg",
+        //     "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=551180330,2986440005&fm=26&gp=0.jpg"
+        // ];
+        // function loadingImg(imgs){
+        //     imgs.forEach( item => {
+        //         let imgitem = actionFun(item);
+        //         console.log(imgitem);
+        //      //    document.body.appendChild(imgitem);
+        //     })
+        // }
+        // loadingImg(arr);
+        </script>
+</body>
+</html>

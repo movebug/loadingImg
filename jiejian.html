@@ -1,0 +1,53 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: sueRimn
+ * @Date: 2019-08-31 08:55:48
+ * @LastEditors: sueRimn
+ * @LastEditTime: 2019-08-31 11:50:50
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    const PENDING = 'pending';
+    const SECCEED = 'secceed';
+    const REJECTED = 'rejected';
+    let count = 0;
+    function MyPromise(callback){
+        let that = this;
+        this.status = PENDING;
+        this.res_sess = null;
+        this.res_err = null;
+         resolver = (res) => {
+            this.status = SECCEED;
+            this.res_sess = res;
+        }
+         rejecter = (rej) => {
+            this.status = REJECTED;
+            this.res_err = rej;
+        }
+        callback(resolver,rejecter)
+    }
+    MyPromise.prototype.then = function(resultend,resulterr){
+        if(this.status === SECCEED){
+            resultend(this.res_sess)
+        }else if(this.status === REJECTED){
+            resulterr(this.res_err)
+        }
+    }
+   let obj = new MyPromise((res,rej)=>{
+        res('333')
+    })
+    obj.then(res=>{
+        console.log(res);
+    })
+    </script>
+</body>
+</html>
